@@ -1,0 +1,72 @@
+{
+    Env： WebStorm 2016.3,
+          Node v8.9.0,
+          NPM v6.0.0,
+          webpack v3.8.1
+ }
+
+0、创建项目，实现HelloSan
+－在 WebStorm 中 New 一个 Empty Project
+
+－在 Terminal 中输入指令：npm init --yes
+// 以当前目录信息初始化package.json文件，用来管理本地装的npm包(一些js插件啥的)
+
+－在 Terminal 中输入指令：npm install san
+// 安装san模块到node_modules目录下，并在package.json的dependencies中记录san的版本
+
+－在 Terminal 中输入指令：npm install webpack --save-dev
+// 安装webpack模块到node_modules目录下，并在package.json的dependencies中记录webpack的版本
+
+－在 Terminal 中输入指令：npm install webpack-cli
+// 作用同上
+
+－在项目根目录下创建一个 webpack.config.js 文件，用来静态打包各种模块(js)
+
+－在 webpack.config.js 中写入如下内容：
+var webpack = require('webpack');
+module.exports = {
+    entry: __dirname + "/index.js", // 打包唯一入口文件
+    output: {
+        filename: "bundle.js"       // 打包后输出文件
+    },
+    mode: 'development'
+};
+
+-在项目根目录下创建一个 index.js 文件，并写入如下内容：
+import san from 'san';
+const MyApp = san.defineComponent({
+    template: `
+                <div>
+                    <input type="text" value="{=name=}">
+                    <p>Hello {{name}}!</p>
+                </div>
+            `
+});
+let myApp = new MyApp({
+    data: {
+        name: 'San'
+    }
+});
+myApp.attach(document.body);
+
+－在 Terminal 中输入指令：npm run build
+
+－在项目根目录下创建一个 index.html 文件，并引入打包的js文件，如下所示：
+<body>
+<script src=“dist/bundle.js"></script>
+<body>
+
+－打开浏览器，在地址栏中输入地址，如:http://localhost:8000/Demo/index.html，即可。
+
+// 任务描述
+1、支持JS、CSS格式解析
+2、区分development/production环境
+3、使用npm scripts设置dev、test、build命令
+－在package.json中添加如下配置：
+"scripts": {
+  "dev": "echo \"Error: no dev specified\" && exit 1",
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "build": "webpack"
+}
+4、写一个San组件在浏览器中显示HelloWorld
+5、使用babel－loader进行JS代码转换
